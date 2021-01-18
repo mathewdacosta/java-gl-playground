@@ -21,11 +21,12 @@ You can see the current names of demos below.
 
 This demo draws a triangle with three points that move up and down using sin and cos functions. The middle vertex's Y coordinate can also be changed by clicking and moving the mouse on the window.
 
-### `origami`, `origami-vsync`: point-and-click polygon
+### `origami`, `origami-vsync`: point-and-click polygons
 
 This demo draws a single continuous polygon out of given vertices, cycling through multiple colours for each vertex.
 
-
+![Origami screenshot 1](https://i.imgur.com/bzYYuLrm.png) 
+![Origami screenshot 2](https://i.imgur.com/nYzKyECm.png)
 
 - Right click to add a vertex
 - Middle click to remove a vertex
