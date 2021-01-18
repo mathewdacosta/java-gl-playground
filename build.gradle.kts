@@ -32,6 +32,24 @@ dependencies {
     runtimeOnly("org.lwjgl", "lwjgl-glfw", classifier = lwjglNatives)
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(15))
+    }
+}
+
 application {
     mainClass.set("dev.mathewdacosta.glplayground.Main")
+}
+
+tasks.withType<JavaCompile> {
+    options.compilerArgs.addAll(listOf("--release", "15", "--enable-preview"))
+}
+
+tasks.withType<Test> {
+    jvmArgs("--enable-preview")
+}
+
+tasks.withType<JavaExec> {
+    jvmArgs("--enable-preview")
 }
