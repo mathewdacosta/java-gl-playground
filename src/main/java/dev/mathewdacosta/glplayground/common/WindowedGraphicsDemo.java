@@ -1,4 +1,4 @@
-package dev.mathewdacosta.glplayground;
+package dev.mathewdacosta.glplayground.common;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
@@ -61,13 +61,18 @@ public abstract class WindowedGraphicsDemo {
         // Set up opengl
         GL.createCapabilities();
         glClearColor(0.08f, 0.08f, 0.08f, 0.0f);
+
+        postInit();
     }
 
     protected void registerGlfwWindowHints() {
         glfwDefaultWindowHints();
+        glfwWindowHint(GLFW_SAMPLES, 4);
     }
 
     protected abstract void registerGlfwCallbacks();
+
+    protected void postInit() {};
 
     private void gameLoop() {
         while (!glfwWindowShouldClose(window)) {
@@ -97,10 +102,13 @@ public abstract class WindowedGraphicsDemo {
     }
 
     private void shutdown() {
+        beforeShutdown();
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
         glfwTerminate();
         errorCallback.free();
     }
+
+    protected void beforeShutdown() {}
 
 }

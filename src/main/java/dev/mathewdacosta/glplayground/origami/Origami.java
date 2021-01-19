@@ -1,6 +1,8 @@
 package dev.mathewdacosta.glplayground.origami;
 
-import dev.mathewdacosta.glplayground.WindowedGraphicsDemo;
+import dev.mathewdacosta.glplayground.common.Color3f;
+import dev.mathewdacosta.glplayground.common.Point2d;
+import dev.mathewdacosta.glplayground.common.WindowedGraphicsDemo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +27,25 @@ public class Origami extends WindowedGraphicsDemo {
 
     private final List<Point2d> points = new ArrayList<>();
     private int currentDragPoint = -1;
+    private int currentDrawMode = GL_POLYGON;
 
     public Origami(boolean vsync) {
         super(WINDOW_WIDTH, WINDOW_HEIGHT, FRAME_RATE, vsync);
+    }
+
+    @Override
+    protected void postInit() {
+        glPointSize(5.0f);
+    }
+
+    private static Point2d getCursorPos(long window) {
+        double[] xWindowPos = new double[1];
+        double[] yWindowPos = new double[1];
+        glfwGetCursorPos(window, xWindowPos, yWindowPos);
+
+        double xScaledPos = (2 * xWindowPos[0] / WINDOW_WIDTH) - 1;
+        double yScaledPos = 1 - (2 * yWindowPos[0] / WINDOW_HEIGHT);
+        return new Point2d(xScaledPos, yScaledPos);
     }
 
     @Override
@@ -52,16 +70,31 @@ public class Origami extends WindowedGraphicsDemo {
                     break;
             }
         });
-    }
 
-    private static Point2d getCursorPos(long window) {
-        double[] xWindowPos = new double[1];
-        double[] yWindowPos = new double[1];
-        glfwGetCursorPos(window, xWindowPos, yWindowPos);
-
-        double xScaledPos = (2 * xWindowPos[0] / WINDOW_WIDTH) - 1;
-        double yScaledPos = 1 - (2 * yWindowPos[0] / WINDOW_HEIGHT);
-        return new Point2d(xScaledPos, yScaledPos);
+        glfwSetKeyCallback(window, (window1, key, scancode, action, mods) -> {
+            switch (key) {
+                case GLFW_KEY_1:
+                    currentDrawMode = GL_POLYGON;
+                    break;
+                case GLFW_KEY_2:
+                    currentDrawMode = GL_LINE_STRIP;
+                    break;
+                case GLFW_KEY_3:
+                    currentDrawMode = GL_LINE_LOOP;
+                    break;
+                case GLFW_KEY_4:
+                    currentDrawMode = GL_POINTS;
+                    break;
+                case GLFW_KEY_5:
+                    currentDrawMode = GL_TRIANGLE_STRIP;
+                    break;
+                case GLFW_KEY_6:
+                    currentDrawMode = GL_QUAD_STRIP;
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     private int findNearPoint() {
@@ -78,7 +111,7 @@ public class Origami extends WindowedGraphicsDemo {
     }
 
     private void grabPoint() {
-         currentDragPoint = findNearPoint();
+        currentDragPoint = findNearPoint();
     }
 
     private void releasePoint() {
@@ -109,8 +142,11 @@ public class Origami extends WindowedGraphicsDemo {
     protected void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glBegin(GL_POLYGON);
-        for (int i = 0, pointsSize = points.size(); i < pointsSize; i++) {
+        int count = points.size();
+        int mode = count > 2 ? currentDrawMode : GL_POINTS;
+
+        glBegin(mode);
+        for (int i = 0; i < count; i++) {
             Point2d point = points.get(i);
             Color3f color = COLORS[i % COLORS.length];
             glColor3f(color.r(), color.g(), color.b());

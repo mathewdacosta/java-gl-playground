@@ -1,6 +1,6 @@
 package dev.mathewdacosta.glplayground.trianglewave;
 
-import dev.mathewdacosta.glplayground.WindowedGraphicsDemo;
+import dev.mathewdacosta.glplayground.common.WindowedGraphicsDemo;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
